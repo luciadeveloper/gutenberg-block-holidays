@@ -5,11 +5,11 @@
     var InnerBlocks = wp.blockEditor.InnerBlocks;
     var IconButton = components.Button;
    
-  
+ 
     blocks.registerBlockType(
       'wpbeta/book', {
       title: i18n.__( 'Holidays' ),
-      icon: 'book',
+      icon: 'palmtree',
       category: 'common',
       attributes: {
         title: {type: 'string'},
@@ -51,7 +51,6 @@
           props.setAttributes({text: event.target.value})
         }
   
-      
   
         var onSelectImage = function( media ) {
           return props.setAttributes( {
@@ -75,7 +74,7 @@
                     className: attributes.mediaID ? 'image-button' : 'button button-large',
                     onClick: obj.open
                     },
-                    ! attributes.mediaID ? i18n.__( 'Adjuntar una imagen' ) : el( 'img', { src: attributes.mediaURL } )
+                    ! attributes.mediaID ? i18n.__( 'Add image' ) : el( 'img', { src: attributes.mediaURL } )
                   );
                 }
               } )
@@ -100,7 +99,7 @@
                   "div",
                   { class: "form-box"},
                       el("label", {},'Review'),
-                      el("textarea", { rows: "4", cols: "90", value: props.attributes.text, onChange: updateText }),
+                      el("textarea", { rows: "4", cols: "80", value: props.attributes.text, onChange: updateText }),
                 )
             ),
   
@@ -162,15 +161,27 @@
 
     blocks.registerBlockType(
       'common/timeline', {
-        title: i18n.__( 'Coments timeline' ),
-        icon: 'chart-area',
+        title: i18n.__( 'Destination' ),
+        icon: 'location-alt',
         category: 'common',
         disabled:true,
         attributes: {
-            hotel: {type: 'string'},
-            nights: {type: 'int'},
-            date: {type: 'string'},
-            timeline: {type: 'string'}
+            hotel: {
+                type: 'string',
+                source: 'html',
+                selector: '.hotel'
+            },
+            nights: {
+                type: 'int',
+                source: 'html',
+                selector: '.nights'
+            },
+           
+            timeline: {
+                type: 'string',
+                source: 'html',
+                selector: '.review'
+            }
         },
     
         edit: function( props ) {
@@ -220,7 +231,7 @@
                     "div",
                     { class: "form-box"},
                         el("label", {},'Your opinion'),
-                        el("textarea", { rows: "4", cols: "90", value: props.attributes.timeline, onChange: updateTimeline }),
+                        el("textarea", { rows: "4", cols: "80", value: props.attributes.timeline, onChange: updateTimeline }),
                     )
                 )
             )
@@ -228,44 +239,24 @@
         },
     
         save: function( props ) {
-    /*
-            const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
-    
-            var date = new Date().getDate(); //Current Date
-            var month = monthNames[new Date().getMonth()]; //Current Month
-            var year = new Date().getFullYear(); //Current Year
-            var hours = new Date().getHours(); //Current Hours
-            var min = new Date().getMinutes(); //Current Minutes
-            var sec = new Date().getSeconds(); //Current Seconds
-            var time = hours + ": " + min +" : "+ sec;
-            var attributes = props.attributes;
-    */
+            
+          //  const { hotel, nights, timeline } = props.attributes
+          var attributes = props.attributes;
     
             return el("div",
                 { class: "timeline"},
 
-/*
-                el('div', { class: "date"}, 
-                    el('span', { class: "dia"}, date),
-                    el('span', { class: "mes"}, month),
-                    el('span', { class: "anio"}, year),
-                ),
-*/
-                el('div', { class: "hotel"}, 'Hotel: ' +props.attributes.hotel),
+                el('div', { class: "hotel"},  attributes.hotel),
 
-                el('div', { class: "nights"}, 'Nigths at this hotel: ' +props.attributes.nights),
+                el('div', { class: "nights"},  attributes.nights),
+
+                el('div', { class: "review"},  attributes.timeline),
                 
-                el("div",{ class: "text"},
-                    el('div', {
-                        data_total:props.attributes.nights,
-                        class: "desc",
-                        data_total: props.attributes.total, 
-                        data_read: props.attributes.nights,
-                    },  
-                    props.attributes.timeline),
-                ),
             )
         },
+
+
+        
     } );
 
 } )(
